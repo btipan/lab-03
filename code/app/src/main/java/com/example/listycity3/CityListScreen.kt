@@ -30,14 +30,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 fun CityListScreen(
     cities: List<City>,
     onAddCity: (City) -> Unit,
+    updateCity:(City, City) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var newCityName by remember { mutableStateOf("") }
     var newProvinceName by remember { mutableStateOf("") }
+    var updatedCityName by remember { mutableStateOf(value = "")}
+    var updatedProvinceName by remember { mutableStateOf(value = "")}
+    var oldCityName by remember {mutableStateOf(value = "")}
+    var oldProvinceName by remember { mutableStateOf(value = "") }
     var showAddCityFields by remember { mutableStateOf(false) }
+    var showUpdateCityFields by remember{ mutableStateOf(value = false)}
 
     Column(modifier = modifier.fillMaxSize()) {
-        if (showAddCityFields) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -50,8 +55,18 @@ fun CityListScreen(
             ) {
                 Text("+")
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
+            FloatingActionButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    showUpdateCityFields = !showUpdateCityFields
+                }
+            ) {
+                Text("C")
+            }
         }
-        }
+        if (showAddCityFields) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,6 +108,81 @@ fun CityListScreen(
             }
 
         }
+        }
+        if (showUpdateCityFields){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = updatedCityName,
+                    onValueChange = { updatedCityName = it },
+                    label = { Text("Updated City") },
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedTextField(
+                    value = updatedProvinceName,
+                    onValueChange = { updatedProvinceName = it },
+                    label = { Text("Updated Province") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = oldCityName,
+                    onValueChange = { oldCityName = it },
+                    label = { Text("Old City") },
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedTextField(
+                    value = oldProvinceName,
+                    onValueChange = { oldProvinceName = it },
+                    label = { Text("Old Province") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ){
+                Button(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    onClick = {
+                        if (updatedCityName.isNotBlank() && updatedProvinceName.isNotBlank()) {
+                            updateCity(
+                                City(
+                                    name = updatedCityName,
+                                    province = updatedProvinceName
+                                ),
+                                City(
+                                    name = oldCityName,
+                                    province = oldProvinceName
+                                )
+                            )
+                            newCityName = ""
+                            newProvinceName = ""
+                            oldCityName = ""
+                            oldProvinceName = ""
+                            showAddCityFields = false
+                        }
+                    }
+                ) {
+                    Text("Replace City")
+                }
+            }
+
+        }
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(cities) { index, city ->
                 CityRow(city = city)
@@ -133,9 +223,12 @@ fun CityListScreenPreview() {
             cities = listOf(
                 City("Edmonton", "AB"),
                 City("Vancouver", "BC"),
-                City("Calgary", "AB")
+                City("Calgary", "AB"),
             ),
-                    onAddCity = {}
-        )
+            onAddCity = {},
+            updateCity = {_,_ -> }
+
+
+            )
     }
 }
