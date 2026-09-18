@@ -2,12 +2,14 @@
 
 ## Student Details
 
-- **Full Name:** `<Enter name>`
-- **CCID:** `<Enter ccid>`
+- **Full Name:** `<Bobbie Angelo Tipan>`
+- **CCID:** `<1664003>`
 
 ## References and Resources
 
 List any resources used here, or simply put `N/A` if not applicable.
+https://kotlinlang.org/docs/lambdas.html#instantiating-a-function-type
+
 
 ## Verbal Collaboration
 
